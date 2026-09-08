@@ -8,9 +8,7 @@ from sqlalchemy_persisted_hybrid_property import hybrid_persisted_property
 from sqlalchemy_persisted_hybrid_property.exceptions import BulkMutationUnsupportedError
 
 
-def test_orm_bulk_update_of_dependency_fails_instead_of_silently_staling_owner(
-    base_type, engine, session
-):
+def test_orm_bulk_update_of_dependency_fails_instead_of_silently_staling_owner(base_type, engine, session):
     Base = base_type
 
     class Owner(Base):

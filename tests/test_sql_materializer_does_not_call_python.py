@@ -42,7 +42,5 @@ def test_sql_materialization_does_not_evaluate_python_getter(base_type, engine):
         owner = Owner(children=[Child(value=2), Child(value=5)])
         session.add(owner)
         session.flush()
-        stored = session.execute(
-            select(Owner.__table__.c.total).where(Owner.__table__.c.id == owner.id)
-        ).scalar_one()
+        stored = session.execute(select(Owner.__table__.c.total).where(Owner.__table__.c.id == owner.id)).scalar_one()
         assert stored == 7

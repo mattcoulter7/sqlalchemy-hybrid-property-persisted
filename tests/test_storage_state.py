@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from sqlalchemy import inspect, select
+from sqlalchemy import inspect
 from sqlalchemy.orm import Mapped, configure_mappers, mapped_column
 
 from sqlalchemy_persisted_hybrid_property import hybrid_persisted_property

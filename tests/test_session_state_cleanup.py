@@ -5,9 +5,7 @@ from sqlalchemy.orm import Mapped, configure_mappers, mapped_column
 from sqlalchemy_persisted_hybrid_property import hybrid_persisted_property
 
 
-def test_internal_pending_materialization_state_is_cleared_after_successful_flush(
-    base_type, engine, session
-):
+def test_internal_pending_materialization_state_is_cleared_after_successful_flush(base_type, engine, session):
     Base = base_type
 
     class Metric(Base):
@@ -32,9 +30,7 @@ def test_internal_pending_materialization_state_is_cleared_after_successful_flus
     assert "sqlalchemy_persisted_hybrid.pending" not in session.info
 
 
-def test_internal_pending_materialization_state_is_cleared_after_rollback(
-    base_type, engine, session
-):
+def test_internal_pending_materialization_state_is_cleared_after_rollback(base_type, engine, session):
     Base = base_type
 
     class Metric(Base):

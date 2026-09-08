@@ -21,7 +21,12 @@ def test_multiple_properties_on_same_owner_are_written_in_one_update(base_type, 
         @total.inplace.expression
         @classmethod
         def _total_expr(cls):
-            return select(func.coalesce(func.sum(Child.value), 0)).where(Child.owner_id == cls.id).correlate(cls).scalar_subquery()
+            return (
+                select(func.coalesce(func.sum(Child.value), 0))
+                .where(Child.owner_id == cls.id)
+                .correlate(cls)
+                .scalar_subquery()
+            )
 
         @hybrid_persisted_property(materialize="sql")
         def count(self) -> int:

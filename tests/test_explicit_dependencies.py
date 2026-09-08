@@ -9,9 +9,7 @@ from sqlalchemy_persisted_hybrid_property.exceptions import DependencyConfigurat
 
 
 def _stored(session, model, pk, column_name):
-    return session.execute(
-        select(model.__table__.c[column_name]).where(model.__table__.c.id == pk)
-    ).scalar_one()
+    return session.execute(select(model.__table__.c[column_name]).where(model.__table__.c.id == pk)).scalar_one()
 
 
 def test_explicit_nested_dependency_invalidates_only_named_scalar(base_type, engine, session):

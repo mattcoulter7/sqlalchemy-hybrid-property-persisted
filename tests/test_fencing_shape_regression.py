@@ -18,9 +18,7 @@ def _stored(session, Quote, quote_id):
     return tuple(row)
 
 
-def test_fencing_like_graph_materializes_quote_rollups_without_service_refresh(
-    base_type, engine, session
-):
+def test_fencing_like_graph_materializes_quote_rollups_without_service_refresh(base_type, engine, session):
     """Regression fixture matching the shape of the fencing calculator graph."""
     Base = base_type
 
@@ -77,12 +75,7 @@ def test_fencing_like_graph_materializes_quote_rollups_without_service_refresh(
 
         @hybrid_persisted_property(materialize="sql")
         def selected_benchmark_count(self) -> int:
-            return sum(
-                1
-                for item in self.line_items
-                for match in item.benchmark_matches
-                if match.selected
-            )
+            return sum(1 for item in self.line_items for match in item.benchmark_matches if match.selected)
 
         @selected_benchmark_count.inplace.expression
         @classmethod

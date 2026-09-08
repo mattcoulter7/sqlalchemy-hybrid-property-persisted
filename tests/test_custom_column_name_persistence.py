@@ -30,6 +30,9 @@ def test_custom_column_name_is_written_during_flush(base_type, engine, session):
     session.add(row)
     session.flush()
 
-    assert session.execute(
-        select(Metric.__table__.c.reporting_doubled).where(Metric.__table__.c.id == row.id)
-    ).scalar_one() == 12
+    assert (
+        session.execute(
+            select(Metric.__table__.c.reporting_doubled).where(Metric.__table__.c.id == row.id)
+        ).scalar_one()
+        == 12
+    )

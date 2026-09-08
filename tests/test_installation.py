@@ -1,8 +1,5 @@
 from __future__ import annotations
 
-from sqlalchemy import event
-from sqlalchemy.orm import Mapper, Session
-
 from sqlalchemy_persisted_hybrid_property import install
 
 

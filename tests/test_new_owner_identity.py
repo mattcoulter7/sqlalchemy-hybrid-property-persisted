@@ -32,6 +32,4 @@ def test_sql_materialization_handles_database_generated_primary_key(base_type, e
     session.flush()
 
     assert row.id is not None
-    assert session.execute(
-        select(Metric.__table__.c.doubled).where(Metric.__table__.c.id == row.id)
-    ).scalar_one() == 12
+    assert session.execute(select(Metric.__table__.c.doubled).where(Metric.__table__.c.id == row.id)).scalar_one() == 12

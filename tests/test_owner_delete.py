@@ -24,12 +24,7 @@ def test_deleting_owner_does_not_attempt_postflush_materialization(base_type, en
         @child_count.inplace.expression
         @classmethod
         def _child_count_expression(cls):
-            return (
-                select(func.count(Child.id))
-                .where(Child.owner_id == cls.id)
-                .correlate(cls)
-                .scalar_subquery()
-            )
+            return select(func.count(Child.id)).where(Child.owner_id == cls.id).correlate(cls).scalar_subquery()
 
     class Child(Base):
         __tablename__ = "delete_child"
@@ -48,6 +43,9 @@ def test_deleting_owner_does_not_attempt_postflush_materialization(base_type, en
     session.delete(owner)
     session.flush()
 
-    assert session.execute(
-        select(func.count()).select_from(Owner.__table__).where(Owner.__table__.c.id == owner_id)
-    ).scalar_one() == 0
+    assert (
+        session.execute(
+            select(func.count()).select_from(Owner.__table__).where(Owner.__table__.c.id == owner_id)
+        ).scalar_one()
+        == 0
+    )

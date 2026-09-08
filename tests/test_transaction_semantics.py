@@ -36,12 +36,13 @@ def test_materialized_update_participates_in_transaction_rollback(base_type, eng
         row = session.get(Metric, row_id)
         row.value = 9
         session.flush()
-        assert session.execute(
-            select(Metric.__table__.c.doubled).where(Metric.__table__.c.id == row_id)
-        ).scalar_one() == 18
+        assert (
+            session.execute(select(Metric.__table__.c.doubled).where(Metric.__table__.c.id == row_id)).scalar_one()
+            == 18
+        )
         session.rollback()
 
     with Session(engine) as session:
-        assert session.execute(
-            select(Metric.__table__.c.doubled).where(Metric.__table__.c.id == row_id)
-        ).scalar_one() == 4
+        assert (
+            session.execute(select(Metric.__table__.c.doubled).where(Metric.__table__.c.id == row_id)).scalar_one() == 4
+        )
