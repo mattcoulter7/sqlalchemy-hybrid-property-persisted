@@ -52,18 +52,14 @@ async def test_async_session_flush_materializes_relationship_hybrid():
             await session.flush()
 
             stored = (
-                await session.execute(
-                    select(Owner.__table__.c.total).where(Owner.__table__.c.id == owner.id)
-                )
+                await session.execute(select(Owner.__table__.c.total).where(Owner.__table__.c.id == owner.id))
             ).scalar_one()
             assert stored == 7
 
             owner.children[0].value = 10
             await session.flush()
             stored = (
-                await session.execute(
-                    select(Owner.__table__.c.total).where(Owner.__table__.c.id == owner.id)
-                )
+                await session.execute(select(Owner.__table__.c.total).where(Owner.__table__.c.id == owner.id))
             ).scalar_one()
             assert stored == 15
     finally:

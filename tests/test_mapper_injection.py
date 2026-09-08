@@ -140,6 +140,7 @@ def test_existing_physical_column_conflict_fails_loudly(base_type):
     Base = base_type
 
     with pytest.raises(PersistedColumnConflictError, match="total"):
+
         class Metric(Base):
             __tablename__ = "mapper_collision"
             id: Mapped[int] = mapped_column(primary_key=True)

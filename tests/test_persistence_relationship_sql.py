@@ -7,9 +7,7 @@ from sqlalchemy_persisted_hybrid_property import hybrid_persisted_property
 
 
 def _stored(session: Session, model, pk, column_name: str):
-    return session.execute(
-        select(model.__table__.c[column_name]).where(model.__table__.c.id == pk)
-    ).scalar_one()
+    return session.execute(select(model.__table__.c[column_name]).where(model.__table__.c.id == pk)).scalar_one()
 
 
 def _models(Base, prefix: str):
@@ -42,12 +40,7 @@ def _models(Base, prefix: str):
         @child_count.inplace.expression
         @classmethod
         def _child_count_expression(cls):
-            return (
-                select(func.count(Child.id))
-                .where(Child.owner_id == cls.id)
-                .correlate(cls)
-                .scalar_subquery()
-            )
+            return select(func.count(Child.id)).where(Child.owner_id == cls.id).correlate(cls).scalar_subquery()
 
     class Child(Base):
         __tablename__ = f"{prefix}_child"
@@ -181,9 +174,7 @@ def test_relationship_reparent_updates_old_and_new_owners(base_type, engine, ses
     assert _stored(session, Owner, new.id, "child_count") == 1
 
 
-def test_fk_only_reparent_updates_old_and_new_owners_even_if_relationships_unloaded(
-    base_type, engine
-):
+def test_fk_only_reparent_updates_old_and_new_owners_even_if_relationships_unloaded(base_type, engine):
     Base = base_type
     Owner, Child = _models(Base, "rel_fk_reparent")
     configure_mappers()

@@ -7,9 +7,7 @@ from sqlalchemy_persisted_hybrid_property import hybrid_persisted_property
 
 
 def _stored(session, model, pk, column_name):
-    return session.execute(
-        select(model.__table__.c[column_name]).where(model.__table__.c.id == pk)
-    ).scalar_one()
+    return session.execute(select(model.__table__.c[column_name]).where(model.__table__.c.id == pk)).scalar_one()
 
 
 def test_insert_materializes_same_row_hybrid(base_type, engine, session):

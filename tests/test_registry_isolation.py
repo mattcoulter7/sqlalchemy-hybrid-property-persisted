@@ -1,8 +1,5 @@
 from __future__ import annotations
 
-import gc
-import weakref
-
 from sqlalchemy import inspect
 from sqlalchemy.orm import Mapped, configure_mappers, mapped_column
 

@@ -1,8 +1,8 @@
 from __future__ import annotations
 
-from sqlalchemy.schema import CreateTable
 from sqlalchemy.dialects import postgresql
 from sqlalchemy.orm import Mapped, configure_mappers, mapped_column
+from sqlalchemy.schema import CreateTable
 
 from sqlalchemy_persisted_hybrid_property import hybrid_persisted_property
 
