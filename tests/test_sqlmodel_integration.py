@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from sqlalchemy import select
 from sqlmodel import Field
+from sqlmodel import SQLModel as BaseSQLModel
 
 from sqlalchemy_persisted_hybrid_property import HybridPersistedProperty, hybrid_property_persisted
 from sqlalchemy_persisted_hybrid_property.sqlmodel import SQLModel
@@ -74,3 +75,26 @@ def test_sqlmodel_hybrid_class_expression_remains_queryable():
 
     sql = str(select(Metric.id).where(Metric.doubled > 5))
     assert "sqlmodel_query.value *" in sql
+
+
+def test_flush_accepts_unhashable_sqlmodel_instances_without_persisted_hybrids(engine, session):
+    class Job(BaseSQLModel, table=True):
+        __tablename__ = "sqlmodel_unhashable_job"
+        id: int | None = Field(default=None, primary_key=True)
+        name: str
+
+    Job.metadata.create_all(engine)
+
+    job = Job(name="queued")
+    hash_error = None
+    try:
+        hash(job)
+    except TypeError as exc:
+        hash_error = exc
+
+    assert hash_error is not None
+
+    session.add(job)
+    session.flush()
+
+    assert job.id == 1

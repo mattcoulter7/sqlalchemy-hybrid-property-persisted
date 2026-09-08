@@ -2,6 +2,7 @@ from __future__ import annotations
 
 # ruff: noqa: D100,D101,D103,ARG001
 from collections import defaultdict
+from collections.abc import Iterable, Iterator
 from dataclasses import dataclass
 from typing import Any
 
@@ -22,12 +23,38 @@ class OwnerRef:
     identity: tuple[Any, ...]
 
 
+class _OwnerSet:
+    """Set-like collection that accepts unhashable ORM instances."""
+
+    def __init__(self, values: Iterable[Any | OwnerRef] = ()) -> None:
+        self._items: list[Any | OwnerRef] = []
+        self._keys: set[Any] = set()
+        self.update(values)
+
+    def __bool__(self) -> bool:
+        return bool(self._items)
+
+    def __iter__(self) -> Iterator[Any | OwnerRef]:
+        return iter(self._items)
+
+    def add(self, value: Any | OwnerRef) -> None:
+        key = value if isinstance(value, OwnerRef) else id(value)
+        if key in self._keys:
+            return
+        self._keys.add(key)
+        self._items.append(value)
+
+    def update(self, values: Iterable[Any | OwnerRef]) -> None:
+        for value in values:
+            self.add(value)
+
+
 def before_flush(session: Session, flush_context: Any, instances: Any) -> None:
     from .mapper import configure_dependencies
 
     configure_dependencies()
-    pending: dict[PersistedHybridEntry, set[Any | OwnerRef]] = defaultdict(set)
-    changed = set(session.new) | set(session.dirty) | set(session.deleted)
+    pending: dict[PersistedHybridEntry, _OwnerSet] = defaultdict(_OwnerSet)
+    changed = _OwnerSet((*session.new, *session.dirty, *session.deleted))
     for obj in changed:
         state = inspect(obj)
         if not state.mapper:
@@ -118,7 +145,7 @@ def after_transaction_end(session: Session, transaction: Any) -> None:
 
 
 def _add_pending_with_siblings(
-    pending: dict[PersistedHybridEntry, set[Any | OwnerRef]],
+    pending: dict[PersistedHybridEntry, _OwnerSet],
     entry: PersistedHybridEntry,
     owner: Any | OwnerRef,
 ) -> None:
@@ -170,10 +197,10 @@ def _dependency_references(columns: frozenset[str] | None, changed_keys: set[str
     return columns is None or not changed_keys or bool(columns & changed_keys)
 
 
-def _resolve_owners(obj: Any, path: DependencyPath) -> set[Any | OwnerRef]:
-    current: set[Any | OwnerRef] = {obj}
+def _resolve_owners(obj: Any, path: DependencyPath) -> _OwnerSet:
+    current = _OwnerSet((obj,))
     for index, step in enumerate(path.steps):
-        next_objects: set[Any | OwnerRef] = set()
+        next_objects = _OwnerSet()
         for item in current:
             if isinstance(item, OwnerRef):
                 continue
@@ -186,7 +213,7 @@ def _resolve_owners(obj: Any, path: DependencyPath) -> set[Any | OwnerRef]:
                 next_objects.update(_related_objects(item, step.relationship.key))
                 if index == len(path.steps) - 1:
                     next_objects.update(_fk_identity_refs(item, step.relationship))
-        current = {item for item in next_objects if item is not None}
+        current = _OwnerSet(item for item in next_objects if item is not None)
     return current
 
 
@@ -197,10 +224,10 @@ def _find_forward_relationship(from_mapper: Mapper[Any], to_mapper: Mapper[Any])
     return None
 
 
-def _related_objects(obj: Any, key: str) -> set[Any]:
+def _related_objects(obj: Any, key: str) -> _OwnerSet:
     state = inspect(obj)
     attr_state = state.attrs[key]
-    found: set[Any] = set()
+    found = _OwnerSet()
     history = attr_state.history
     for group in (history.added, history.unchanged, history.deleted):
         for value in group:
