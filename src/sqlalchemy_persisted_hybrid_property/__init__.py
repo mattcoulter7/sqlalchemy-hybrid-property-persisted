@@ -10,7 +10,7 @@ from sqlalchemy.orm import Mapper, Session
 from sqlalchemy.orm.mapper import Mapper as MapperClass
 from sqlalchemy.sql.dml import Delete, Update
 
-from .descriptor import HybridPersistedProperty, hybrid_persisted_property, hybrid_property_persisted
+from .descriptor import HybridPersistedProperty, hybrid_property_persisted, hybrid_property_persisted
 from .exceptions import BulkMutationUnsupportedError
 from .mapper import configure_dependencies, configure_mapper
 from .persistence import after_flush_postexec, after_transaction_end, before_flush
@@ -19,7 +19,7 @@ from .registry import registry
 __all__ = [
     "HybridPersistedProperty",
     "InstallState",
-    "hybrid_persisted_property",
+    "hybrid_property_persisted",
     "hybrid_property_persisted",
     "install",
     "installation_state",

@@ -4,7 +4,7 @@ import pytest
 from sqlalchemy import Integer, inspect, select
 from sqlalchemy.orm import Mapped, configure_mappers, mapped_column
 
-from sqlalchemy_persisted_hybrid_property import HybridPersistedProperty, hybrid_persisted_property
+from sqlalchemy_persisted_hybrid_property import HybridPersistedProperty, hybrid_property_persisted
 from sqlalchemy_persisted_hybrid_property.exceptions import PersistedColumnConflictError
 from sqlalchemy_persisted_hybrid_property.registry import registry
 
@@ -18,7 +18,7 @@ def test_mapper_injects_real_physical_column_without_replacing_hybrid(base_type)
         left: Mapped[int]
         right: Mapped[int]
 
-        @hybrid_persisted_property()
+        @hybrid_property_persisted()
         def total(self) -> int:
             return self.left + self.right
 
@@ -50,7 +50,7 @@ def test_custom_physical_column_name_is_honored(base_type):
         id: Mapped[int] = mapped_column(primary_key=True)
         value: Mapped[int]
 
-        @hybrid_persisted_property(column_name="reporting_value")
+        @hybrid_property_persisted(column_name="reporting_value")
         def doubled(self) -> int:
             return self.value * 2
 
@@ -70,7 +70,7 @@ def test_column_nullability_default_and_server_default_are_applied(base_type):
         id: Mapped[int] = mapped_column(primary_key=True)
         value: Mapped[int]
 
-        @hybrid_persisted_property(nullable=False, default=3, server_default="3")
+        @hybrid_property_persisted(nullable=False, default=3, server_default="3")
         def doubled(self) -> int:
             return self.value * 2
 
@@ -90,7 +90,7 @@ def test_metadata_sees_injected_column_for_migrations(base_type):
         id: Mapped[int] = mapped_column(primary_key=True)
         value: Mapped[int]
 
-        @hybrid_persisted_property()
+        @hybrid_property_persisted()
         def doubled(self) -> int:
             return self.value * 2
 
@@ -107,7 +107,7 @@ def test_registry_records_descriptor_for_owner_mapper(base_type):
         id: Mapped[int] = mapped_column(primary_key=True)
         value: Mapped[int]
 
-        @hybrid_persisted_property()
+        @hybrid_property_persisted()
         def doubled(self) -> int:
             return self.value * 2
 
@@ -125,7 +125,7 @@ def test_configuration_is_idempotent(base_type):
         id: Mapped[int] = mapped_column(primary_key=True)
         value: Mapped[int]
 
-        @hybrid_persisted_property()
+        @hybrid_property_persisted()
         def doubled(self) -> int:
             return self.value * 2
 
@@ -148,7 +148,7 @@ def test_existing_physical_column_conflict_fails_loudly(base_type):
             left: Mapped[int]
             right: Mapped[int]
 
-            @hybrid_persisted_property()
+            @hybrid_property_persisted()
             def total(self) -> int:
                 return self.left + self.right
 

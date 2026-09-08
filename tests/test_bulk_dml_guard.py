@@ -4,7 +4,7 @@ import pytest
 from sqlalchemy import ForeignKey, func, select, update
 from sqlalchemy.orm import Mapped, configure_mappers, mapped_column, relationship
 
-from sqlalchemy_persisted_hybrid_property import hybrid_persisted_property
+from sqlalchemy_persisted_hybrid_property import hybrid_property_persisted
 from sqlalchemy_persisted_hybrid_property.exceptions import BulkMutationUnsupportedError
 
 
@@ -16,7 +16,7 @@ def test_orm_bulk_update_of_dependency_fails_instead_of_silently_staling_owner(b
         id: Mapped[int] = mapped_column(primary_key=True)
         children: Mapped[list[Child]] = relationship(back_populates="owner")
 
-        @hybrid_persisted_property(materialize="sql")
+        @hybrid_property_persisted(materialize="sql")
         def total(self) -> int:
             return sum(c.value for c in self.children)
 

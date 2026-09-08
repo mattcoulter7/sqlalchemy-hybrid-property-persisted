@@ -182,8 +182,6 @@ materialize="sql"     # require a hybrid SQL expression
 materialize="python"  # evaluate the Python getter on the owner object
 ```
 
-The older alias `hybrid_persisted_property` is also exported, but `hybrid_property_persisted` is the preferred public name.
-
 ## SQLModel
 
 Use the SQLModel shim if you want persisted hybrids in SQLModel classes:

@@ -4,7 +4,7 @@ from alembic.autogenerate import compare_metadata
 from alembic.migration import MigrationContext
 from sqlalchemy.orm import Mapped, configure_mappers, mapped_column
 
-from sqlalchemy_persisted_hybrid_property import hybrid_persisted_property
+from sqlalchemy_persisted_hybrid_property import hybrid_property_persisted
 
 
 def test_alembic_autogenerate_sees_persisted_column(base_type, engine):
@@ -15,7 +15,7 @@ def test_alembic_autogenerate_sees_persisted_column(base_type, engine):
         id: Mapped[int] = mapped_column(primary_key=True)
         value: Mapped[int]
 
-        @hybrid_persisted_property()
+        @hybrid_property_persisted()
         def doubled(self) -> int:
             return self.value * 2
 

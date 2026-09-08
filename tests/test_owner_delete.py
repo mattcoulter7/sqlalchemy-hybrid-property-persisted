@@ -3,7 +3,7 @@ from __future__ import annotations
 from sqlalchemy import ForeignKey, func, select
 from sqlalchemy.orm import Mapped, configure_mappers, mapped_column, relationship
 
-from sqlalchemy_persisted_hybrid_property import hybrid_persisted_property
+from sqlalchemy_persisted_hybrid_property import hybrid_property_persisted
 
 
 def test_deleting_owner_does_not_attempt_postflush_materialization(base_type, engine, session):
@@ -17,7 +17,7 @@ def test_deleting_owner_does_not_attempt_postflush_materialization(base_type, en
             cascade="all, delete-orphan",
         )
 
-        @hybrid_persisted_property(materialize="sql")
+        @hybrid_property_persisted(materialize="sql")
         def child_count(self) -> int:
             return len(self.children)
 

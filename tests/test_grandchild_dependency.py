@@ -3,7 +3,7 @@ from __future__ import annotations
 from sqlalchemy import ForeignKey, func, select
 from sqlalchemy.orm import Mapped, configure_mappers, mapped_column, relationship
 
-from sqlalchemy_persisted_hybrid_property import hybrid_persisted_property
+from sqlalchemy_persisted_hybrid_property import hybrid_property_persisted
 
 
 def _stored(session, model, pk, column_name):
@@ -18,7 +18,7 @@ def test_grandchild_scalar_change_materializes_root_owner(base_type, engine, ses
         id: Mapped[int] = mapped_column(primary_key=True)
         children: Mapped[list[Child]] = relationship(back_populates="owner", cascade="all, delete-orphan")
 
-        @hybrid_persisted_property(materialize="sql")
+        @hybrid_property_persisted(materialize="sql")
         def grand_total(self) -> int:
             return sum(gc.value for child in self.children for gc in child.grandchildren)
 
@@ -69,7 +69,7 @@ def test_grandchild_reparent_between_child_branches_updates_both_roots(base_type
         id: Mapped[int] = mapped_column(primary_key=True)
         children: Mapped[list[Child]] = relationship(back_populates="owner", cascade="all, delete-orphan")
 
-        @hybrid_persisted_property(materialize="sql")
+        @hybrid_property_persisted(materialize="sql")
         def grand_total(self) -> int:
             return sum(gc.value for child in self.children for gc in child.grandchildren)
 

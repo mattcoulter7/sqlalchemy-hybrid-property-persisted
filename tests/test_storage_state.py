@@ -3,7 +3,7 @@ from __future__ import annotations
 from sqlalchemy import inspect
 from sqlalchemy.orm import Mapped, configure_mappers, mapped_column
 
-from sqlalchemy_persisted_hybrid_property import hybrid_persisted_property
+from sqlalchemy_persisted_hybrid_property import hybrid_property_persisted
 
 
 def test_sql_materialization_expires_or_synchronizes_hidden_storage_state(base_type, engine, session):
@@ -14,7 +14,7 @@ def test_sql_materialization_expires_or_synchronizes_hidden_storage_state(base_t
         id: Mapped[int] = mapped_column(primary_key=True)
         value: Mapped[int]
 
-        @hybrid_persisted_property(materialize="sql")
+        @hybrid_property_persisted(materialize="sql")
         def doubled(self) -> int:
             return self.value * 2
 

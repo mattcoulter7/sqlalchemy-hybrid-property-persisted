@@ -3,7 +3,7 @@ from __future__ import annotations
 from sqlalchemy import ForeignKey, func, select
 from sqlalchemy.orm import Mapped, Session, configure_mappers, mapped_column, relationship
 
-from sqlalchemy_persisted_hybrid_property import hybrid_persisted_property
+from sqlalchemy_persisted_hybrid_property import hybrid_property_persisted
 
 
 def test_multiple_properties_on_same_owner_are_written_in_one_update(base_type, engine):
@@ -14,7 +14,7 @@ def test_multiple_properties_on_same_owner_are_written_in_one_update(base_type, 
         id: Mapped[int] = mapped_column(primary_key=True)
         children: Mapped[list[Child]] = relationship(back_populates="owner")
 
-        @hybrid_persisted_property(materialize="sql")
+        @hybrid_property_persisted(materialize="sql")
         def total(self) -> int:
             return sum(c.value for c in self.children)
 
@@ -28,7 +28,7 @@ def test_multiple_properties_on_same_owner_are_written_in_one_update(base_type, 
                 .scalar_subquery()
             )
 
-        @hybrid_persisted_property(materialize="sql")
+        @hybrid_property_persisted(materialize="sql")
         def count(self) -> int:
             return len(self.children)
 

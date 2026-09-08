@@ -3,7 +3,7 @@ from __future__ import annotations
 from sqlalchemy import ForeignKey, case, func, select
 from sqlalchemy.orm import Mapped, configure_mappers, mapped_column, relationship
 
-from sqlalchemy_persisted_hybrid_property import hybrid_persisted_property
+from sqlalchemy_persisted_hybrid_property import hybrid_property_persisted
 
 
 def _stored(session, Quote, quote_id):
@@ -30,7 +30,7 @@ def test_fencing_like_graph_materializes_quote_rollups_without_service_refresh(b
             cascade="all, delete-orphan",
         )
 
-        @hybrid_persisted_property(materialize="sql")
+        @hybrid_property_persisted(materialize="sql")
         def parent_items_count(self) -> int:
             return len(self.line_items)
 
@@ -44,7 +44,7 @@ def test_fencing_like_graph_materializes_quote_rollups_without_service_refresh(b
                 .scalar_subquery()
             )
 
-        @hybrid_persisted_property(materialize="sql")
+        @hybrid_property_persisted(materialize="sql")
         def parent_items_benchmarked_count(self) -> int:
             return sum(1 for item in self.line_items if item.benchmarked)
 
@@ -58,7 +58,7 @@ def test_fencing_like_graph_materializes_quote_rollups_without_service_refresh(b
                 .scalar_subquery()
             )
 
-        @hybrid_persisted_property(materialize="sql")
+        @hybrid_property_persisted(materialize="sql")
         def child_items_count(self) -> int:
             return sum(len(item.children) for item in self.line_items)
 
@@ -73,7 +73,7 @@ def test_fencing_like_graph_materializes_quote_rollups_without_service_refresh(b
                 .scalar_subquery()
             )
 
-        @hybrid_persisted_property(materialize="sql")
+        @hybrid_property_persisted(materialize="sql")
         def selected_benchmark_count(self) -> int:
             return sum(1 for item in self.line_items for match in item.benchmark_matches if match.selected)
 

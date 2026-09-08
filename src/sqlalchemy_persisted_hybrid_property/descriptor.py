@@ -108,9 +108,6 @@ def hybrid_property_persisted(
     return decorate
 
 
-hybrid_persisted_property = hybrid_property_persisted
-
-
 def _normalize_depends_on(value: str | Iterable[str] | None) -> tuple[str, ...] | str | None:
     if value in ("auto", None):
         return value

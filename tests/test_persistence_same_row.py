@@ -3,7 +3,7 @@ from __future__ import annotations
 from sqlalchemy import select
 from sqlalchemy.orm import Mapped, configure_mappers, mapped_column
 
-from sqlalchemy_persisted_hybrid_property import hybrid_persisted_property
+from sqlalchemy_persisted_hybrid_property import hybrid_property_persisted
 
 
 def _stored(session, model, pk, column_name):
@@ -19,7 +19,7 @@ def test_insert_materializes_same_row_hybrid(base_type, engine, session):
         left: Mapped[int]
         right: Mapped[int]
 
-        @hybrid_persisted_property()
+        @hybrid_property_persisted()
         def total(self) -> int:
             return self.left + self.right
 
@@ -47,7 +47,7 @@ def test_update_materializes_same_row_hybrid(base_type, engine, session):
         left: Mapped[int]
         right: Mapped[int]
 
-        @hybrid_persisted_property()
+        @hybrid_property_persisted()
         def total(self) -> int:
             return self.left + self.right
 
@@ -76,7 +76,7 @@ def test_noop_flush_does_not_emit_materialization_update(base_type, engine):
         id: Mapped[int] = mapped_column(primary_key=True)
         value: Mapped[int]
 
-        @hybrid_persisted_property()
+        @hybrid_property_persisted()
         def doubled(self) -> int:
             return self.value * 2
 

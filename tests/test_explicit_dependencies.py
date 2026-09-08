@@ -4,7 +4,7 @@ import pytest
 from sqlalchemy import ForeignKey, select
 from sqlalchemy.orm import Mapped, configure_mappers, mapped_column, relationship
 
-from sqlalchemy_persisted_hybrid_property import hybrid_persisted_property
+from sqlalchemy_persisted_hybrid_property import hybrid_property_persisted
 from sqlalchemy_persisted_hybrid_property.exceptions import DependencyConfigurationError
 
 
@@ -20,7 +20,7 @@ def test_explicit_nested_dependency_invalidates_only_named_scalar(base_type, eng
         id: Mapped[int] = mapped_column(primary_key=True)
         children: Mapped[list[Child]] = relationship(back_populates="owner")
 
-        @hybrid_persisted_property(depends_on="children.value", materialize="python")
+        @hybrid_property_persisted(depends_on="children.value", materialize="python")
         def total(self) -> int:
             return sum(child.value for child in self.children)
 
@@ -51,7 +51,7 @@ def test_collection_dependency_detects_append_and_remove(base_type, engine, sess
         id: Mapped[int] = mapped_column(primary_key=True)
         children: Mapped[list[Child]] = relationship(back_populates="owner", cascade="all, delete-orphan")
 
-        @hybrid_persisted_property(depends_on="children", materialize="python")
+        @hybrid_property_persisted(depends_on="children", materialize="python")
         def child_count(self) -> int:
             return len(self.children)
 
@@ -87,7 +87,7 @@ def test_invalid_explicit_dependency_fails_at_mapper_configuration(base_type):
         id: Mapped[int] = mapped_column(primary_key=True)
         value: Mapped[int]
 
-        @hybrid_persisted_property(depends_on="missing.value")
+        @hybrid_property_persisted(depends_on="missing.value")
         def total(self) -> int:
             return self.value
 

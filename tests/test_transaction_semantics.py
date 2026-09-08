@@ -3,7 +3,7 @@ from __future__ import annotations
 from sqlalchemy import select
 from sqlalchemy.orm import Mapped, Session, configure_mappers, mapped_column
 
-from sqlalchemy_persisted_hybrid_property import hybrid_persisted_property
+from sqlalchemy_persisted_hybrid_property import hybrid_property_persisted
 
 
 def test_materialized_update_participates_in_transaction_rollback(base_type, engine):
@@ -14,7 +14,7 @@ def test_materialized_update_participates_in_transaction_rollback(base_type, eng
         id: Mapped[int] = mapped_column(primary_key=True)
         value: Mapped[int]
 
-        @hybrid_persisted_property()
+        @hybrid_property_persisted()
         def doubled(self) -> int:
             return self.value * 2
 
