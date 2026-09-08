@@ -3,7 +3,7 @@ from __future__ import annotations
 from sqlalchemy import inspect
 from sqlalchemy.orm import Mapped, configure_mappers, mapped_column
 
-from sqlalchemy_persisted_hybrid_property import hybrid_persisted_property
+from sqlalchemy_persisted_hybrid_property import hybrid_property_persisted
 from sqlalchemy_persisted_hybrid_property.registry import PersistedHybridRegistry
 
 
@@ -15,7 +15,7 @@ def test_registry_does_not_duplicate_descriptor_entries(base_type):
         id: Mapped[int] = mapped_column(primary_key=True)
         value: Mapped[int]
 
-        @hybrid_persisted_property()
+        @hybrid_property_persisted()
         def doubled(self) -> int:
             return self.value * 2
 
@@ -37,7 +37,7 @@ def test_registry_clear_removes_entries(base_type):
         id: Mapped[int] = mapped_column(primary_key=True)
         value: Mapped[int]
 
-        @hybrid_persisted_property()
+        @hybrid_property_persisted()
         def doubled(self) -> int:
             return self.value * 2
 

@@ -3,7 +3,7 @@ from __future__ import annotations
 from sqlalchemy import ForeignKey, select
 from sqlalchemy.orm import Mapped, configure_mappers, mapped_column, relationship
 
-from sqlalchemy_persisted_hybrid_property import hybrid_persisted_property
+from sqlalchemy_persisted_hybrid_property import hybrid_property_persisted
 
 
 def _stored(session, model, pk, column_name):
@@ -18,7 +18,7 @@ def test_python_only_property_materializes_from_explicit_dependency(base_type, e
         id: Mapped[int] = mapped_column(primary_key=True)
         children: Mapped[list[Child]] = relationship(back_populates="owner", cascade="all, delete-orphan")
 
-        @hybrid_persisted_property(
+        @hybrid_property_persisted(
             depends_on=["children", "children.value"],
             materialize="python",
         )
@@ -56,7 +56,7 @@ def test_python_materialization_sets_backing_mapped_attribute_without_touching_h
         id: Mapped[int] = mapped_column(primary_key=True)
         value: Mapped[int]
 
-        @hybrid_persisted_property(depends_on="value", materialize="python")
+        @hybrid_property_persisted(depends_on="value", materialize="python")
         def doubled(self) -> int:
             return self.value * 2
 
@@ -84,7 +84,7 @@ def test_auto_falls_back_to_python_when_no_sql_expression_exists(base_type, engi
         id: Mapped[int] = mapped_column(primary_key=True)
         value: Mapped[int]
 
-        @hybrid_persisted_property(depends_on="value", materialize="auto")
+        @hybrid_property_persisted(depends_on="value", materialize="auto")
         def label_length(self) -> int:
             return len(f"value={self.value}")
 

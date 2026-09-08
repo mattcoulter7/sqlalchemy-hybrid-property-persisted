@@ -3,7 +3,7 @@ from __future__ import annotations
 from sqlalchemy import select
 from sqlalchemy.orm import Mapped, configure_mappers, mapped_column
 
-from sqlalchemy_persisted_hybrid_property import hybrid_persisted_property
+from sqlalchemy_persisted_hybrid_property import hybrid_property_persisted
 
 
 def test_custom_column_name_is_written_during_flush(base_type, engine, session):
@@ -14,7 +14,7 @@ def test_custom_column_name_is_written_during_flush(base_type, engine, session):
         id: Mapped[int] = mapped_column(primary_key=True)
         value: Mapped[int]
 
-        @hybrid_persisted_property(column_name="reporting_doubled")
+        @hybrid_property_persisted(column_name="reporting_doubled")
         def doubled(self) -> int:
             return self.value * 2
 

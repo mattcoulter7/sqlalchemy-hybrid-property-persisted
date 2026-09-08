@@ -5,7 +5,7 @@ from sqlalchemy import ForeignKey, func, select
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
 from sqlalchemy.orm import DeclarativeBase, Mapped, configure_mappers, mapped_column, relationship
 
-from sqlalchemy_persisted_hybrid_property import hybrid_persisted_property
+from sqlalchemy_persisted_hybrid_property import hybrid_property_persisted
 
 
 @pytest.mark.async_
@@ -19,7 +19,7 @@ async def test_async_session_flush_materializes_relationship_hybrid():
         id: Mapped[int] = mapped_column(primary_key=True)
         children: Mapped[list[Child]] = relationship(back_populates="owner")
 
-        @hybrid_persisted_property(materialize="sql")
+        @hybrid_property_persisted(materialize="sql")
         def total(self) -> int:
             return sum(child.value for child in self.children)
 

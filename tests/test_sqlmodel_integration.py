@@ -3,7 +3,7 @@ from __future__ import annotations
 from sqlalchemy import select
 from sqlmodel import Field
 
-from sqlalchemy_persisted_hybrid_property import HybridPersistedProperty, hybrid_persisted_property
+from sqlalchemy_persisted_hybrid_property import HybridPersistedProperty, hybrid_property_persisted
 from sqlalchemy_persisted_hybrid_property.sqlmodel import SQLModel
 
 
@@ -14,7 +14,7 @@ def test_sqlmodel_class_body_accepts_persisted_hybrid_without_per_model_config()
         left: int
         right: int
 
-        @hybrid_persisted_property()
+        @hybrid_property_persisted()
         def total(self) -> int:
             return self.left + self.right
 
@@ -33,7 +33,7 @@ def test_sqlmodel_pydantic_fields_do_not_include_hidden_backing_attribute():
         id: int | None = Field(default=None, primary_key=True)
         value: int
 
-        @hybrid_persisted_property()
+        @hybrid_property_persisted()
         def doubled(self) -> int:
             return self.value * 2
 
@@ -48,7 +48,7 @@ def test_sqlmodel_instance_validation_and_dump_remain_normal():
         id: int | None = Field(default=None, primary_key=True)
         value: int
 
-        @hybrid_persisted_property()
+        @hybrid_property_persisted()
         def doubled(self) -> int:
             return self.value * 2
 
@@ -63,7 +63,7 @@ def test_sqlmodel_hybrid_class_expression_remains_queryable():
         id: int | None = Field(default=None, primary_key=True)
         value: int
 
-        @hybrid_persisted_property()
+        @hybrid_property_persisted()
         def doubled(self) -> int:
             return self.value * 2
 

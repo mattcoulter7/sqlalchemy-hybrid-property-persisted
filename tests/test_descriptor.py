@@ -4,11 +4,11 @@ from sqlalchemy import Integer, select
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import Mapped, mapped_column
 
-from sqlalchemy_persisted_hybrid_property import HybridPersistedProperty, hybrid_persisted_property
+from sqlalchemy_persisted_hybrid_property import HybridPersistedProperty, hybrid_property_persisted
 
 
 def test_descriptor_is_a_real_hybrid_property():
-    @hybrid_persisted_property()
+    @hybrid_property_persisted()
     def value(self) -> int:
         return 1
 
@@ -17,7 +17,7 @@ def test_descriptor_is_a_real_hybrid_property():
 
 
 def test_descriptor_preserves_constructor_metadata():
-    @hybrid_persisted_property(
+    @hybrid_property_persisted(
         type_=Integer(),
         column_name="persisted_total",
         nullable=False,
@@ -37,7 +37,7 @@ def test_descriptor_preserves_constructor_metadata():
 
 
 def test_non_inplace_expression_copy_retains_persistence_metadata():
-    @hybrid_persisted_property(column_name="persisted_total", depends_on="items")
+    @hybrid_property_persisted(column_name="persisted_total", depends_on="items")
     def total(self) -> int:
         return self.left + self.right
 
@@ -54,7 +54,7 @@ def test_non_inplace_expression_copy_retains_persistence_metadata():
 
 
 def test_non_inplace_setter_copy_retains_persistence_metadata():
-    @hybrid_persisted_property(column_name="persisted_total")
+    @hybrid_property_persisted(column_name="persisted_total")
     def total(self) -> int:
         return self._total
 
@@ -70,7 +70,7 @@ def test_non_inplace_setter_copy_retains_persistence_metadata():
 
 
 def test_non_inplace_getter_copy_retains_persistence_metadata():
-    @hybrid_persisted_property(column_name="persisted_total")
+    @hybrid_property_persisted(column_name="persisted_total")
     def total(self) -> int:
         return 1
 
@@ -86,7 +86,7 @@ def test_non_inplace_getter_copy_retains_persistence_metadata():
 
 
 def test_non_inplace_deleter_copy_retains_persistence_metadata():
-    @hybrid_persisted_property(column_name="persisted_total")
+    @hybrid_property_persisted(column_name="persisted_total")
     def total(self) -> int:
         return self._total
 
@@ -102,7 +102,7 @@ def test_non_inplace_deleter_copy_retains_persistence_metadata():
 
 
 def test_non_inplace_update_expression_copy_retains_persistence_metadata():
-    @hybrid_persisted_property(column_name="persisted_total")
+    @hybrid_property_persisted(column_name="persisted_total")
     def total(self) -> int:
         return self.left + self.right
 
@@ -118,7 +118,7 @@ def test_non_inplace_update_expression_copy_retains_persistence_metadata():
 
 
 def test_inplace_modifiers_keep_same_descriptor_object():
-    @hybrid_persisted_property(column_name="persisted_total")
+    @hybrid_property_persisted(column_name="persisted_total")
     def total(self) -> int:
         return self.left + self.right
 
@@ -150,7 +150,7 @@ def test_normal_hybrid_instance_and_class_semantics_are_unchanged(base_type):
         start: Mapped[int]
         end: Mapped[int]
 
-        @hybrid_persisted_property()
+        @hybrid_property_persisted()
         def length(self) -> int:
             return self.end - self.start
 
@@ -175,7 +175,7 @@ def test_hybrid_setter_is_still_invoked(base_type):
         start: Mapped[int]
         end: Mapped[int]
 
-        @hybrid_persisted_property()
+        @hybrid_property_persisted()
         def length(self) -> int:
             return self.end - self.start
 

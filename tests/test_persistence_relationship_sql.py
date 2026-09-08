@@ -3,7 +3,7 @@ from __future__ import annotations
 from sqlalchemy import ForeignKey, func, select
 from sqlalchemy.orm import Mapped, Session, configure_mappers, mapped_column, relationship
 
-from sqlalchemy_persisted_hybrid_property import hybrid_persisted_property
+from sqlalchemy_persisted_hybrid_property import hybrid_property_persisted
 
 
 def _stored(session: Session, model, pk, column_name: str):
@@ -19,7 +19,7 @@ def _models(Base, prefix: str):
             cascade="all, delete-orphan",
         )
 
-        @hybrid_persisted_property(materialize="auto")
+        @hybrid_property_persisted(materialize="auto")
         def total(self) -> int:
             return sum(child.value for child in self.children)
 
@@ -33,7 +33,7 @@ def _models(Base, prefix: str):
                 .scalar_subquery()
             )
 
-        @hybrid_persisted_property(materialize="auto")
+        @hybrid_property_persisted(materialize="auto")
         def child_count(self) -> int:
             return len(self.children)
 

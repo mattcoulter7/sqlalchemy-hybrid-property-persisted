@@ -1,15 +1,16 @@
 [project]
 name = "sqlalchemy-persisted-hybrid-property"
-version = "1.0.0"
-description = "Persist SQLAlchemy hybrid_property values into real mapped columns."
+version = "1.0.1"
+description = "Implementation of SQLAlchemy's @hybrid_property with database persistence."
 authors = [{ name = "Matt Coulter" }]
 requires-python = ">=3.11,<4.0"
 readme = "README.md"
 dependencies = [
-    "aiosqlite>=0.21,<0.22",
-    "alembic>=1.17,<2",
-    "greenlet>=3.3,<4",
     "sqlalchemy>=2.0,<3",
+]
+
+[project.optional-dependencies]
+sqlmodel = [
     "sqlmodel>=0.0.27,<0.1",
 ]
 
@@ -20,12 +21,16 @@ Repository = "https://github.com/mattcoulter7/sqlalchemy-hybrid-property-persist
 
 [dependency-groups]
 dev = [
+    "aiosqlite>=0.21,<0.22",
+    "alembic>=1.17,<2",
+    "greenlet>=3.3,<4",
     "pytest>=8.4.1,<9",
     "pytest-asyncio>=1.4.0,<2",
     "pytest-cov>=7.1.0,<8",
     "ruff>=0.12.3,<0.13",
     "pre-commit>=4.2.0,<5",
     "isort>=6.0.1,<7",
+    "sqlmodel>=0.0.27,<0.1",
 ]
 
 [tool.hatch.build.targets.sdist]

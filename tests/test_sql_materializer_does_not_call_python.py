@@ -3,7 +3,7 @@ from __future__ import annotations
 from sqlalchemy import ForeignKey, func, select
 from sqlalchemy.orm import Mapped, Session, configure_mappers, mapped_column, relationship
 
-from sqlalchemy_persisted_hybrid_property import hybrid_persisted_property
+from sqlalchemy_persisted_hybrid_property import hybrid_property_persisted
 
 
 def test_sql_materialization_does_not_evaluate_python_getter(base_type, engine):
@@ -14,7 +14,7 @@ def test_sql_materialization_does_not_evaluate_python_getter(base_type, engine):
         id: Mapped[int] = mapped_column(primary_key=True)
         children: Mapped[list[Child]] = relationship(back_populates="owner", cascade="all, delete-orphan")
 
-        @hybrid_persisted_property(materialize="sql")
+        @hybrid_property_persisted(materialize="sql")
         def total(self) -> int:
             raise AssertionError("Python getter must not be called for SQL materialization")
 

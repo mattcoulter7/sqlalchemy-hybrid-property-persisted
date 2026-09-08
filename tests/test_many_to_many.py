@@ -3,7 +3,7 @@ from __future__ import annotations
 from sqlalchemy import Column, ForeignKey, Table, func, select
 from sqlalchemy.orm import Mapped, configure_mappers, mapped_column, relationship
 
-from sqlalchemy_persisted_hybrid_property import hybrid_persisted_property
+from sqlalchemy_persisted_hybrid_property import hybrid_property_persisted
 
 
 def _stored(session, model, pk, column_name):
@@ -24,7 +24,7 @@ def test_many_to_many_collection_append_and_remove_materialize_owner(base_type, 
         id: Mapped[int] = mapped_column(primary_key=True)
         tags: Mapped[list[Tag]] = relationship(secondary=association, back_populates="owners")
 
-        @hybrid_persisted_property(materialize="sql")
+        @hybrid_property_persisted(materialize="sql")
         def tag_count(self) -> int:
             return len(self.tags)
 

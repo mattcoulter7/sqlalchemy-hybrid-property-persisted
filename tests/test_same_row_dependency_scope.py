@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from sqlalchemy.orm import Mapped, Session, configure_mappers, mapped_column
 
-from sqlalchemy_persisted_hybrid_property import hybrid_persisted_property
+from sqlalchemy_persisted_hybrid_property import hybrid_property_persisted
 
 
 def test_same_row_unrelated_attribute_does_not_materialize(base_type, engine):
@@ -15,7 +15,7 @@ def test_same_row_unrelated_attribute_does_not_materialize(base_type, engine):
         right: Mapped[int]
         ignored: Mapped[str]
 
-        @hybrid_persisted_property(materialize="sql")
+        @hybrid_property_persisted(materialize="sql")
         def total(self) -> int:
             return self.left + self.right
 

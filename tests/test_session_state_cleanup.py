@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from sqlalchemy.orm import Mapped, configure_mappers, mapped_column
 
-from sqlalchemy_persisted_hybrid_property import hybrid_persisted_property
+from sqlalchemy_persisted_hybrid_property import hybrid_property_persisted
 
 
 def test_internal_pending_materialization_state_is_cleared_after_successful_flush(base_type, engine, session):
@@ -13,7 +13,7 @@ def test_internal_pending_materialization_state_is_cleared_after_successful_flus
         id: Mapped[int] = mapped_column(primary_key=True)
         value: Mapped[int]
 
-        @hybrid_persisted_property(materialize="sql")
+        @hybrid_property_persisted(materialize="sql")
         def doubled(self) -> int:
             return self.value * 2
 
@@ -38,7 +38,7 @@ def test_internal_pending_materialization_state_is_cleared_after_rollback(base_t
         id: Mapped[int] = mapped_column(primary_key=True)
         value: Mapped[int]
 
-        @hybrid_persisted_property(materialize="sql")
+        @hybrid_property_persisted(materialize="sql")
         def doubled(self) -> int:
             return self.value * 2
 

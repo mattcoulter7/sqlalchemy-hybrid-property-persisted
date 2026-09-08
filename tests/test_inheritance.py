@@ -3,7 +3,7 @@ from __future__ import annotations
 from sqlalchemy import ForeignKey, Integer, inspect
 from sqlalchemy.orm import Mapped, configure_mappers, mapped_column
 
-from sqlalchemy_persisted_hybrid_property import HybridPersistedProperty, hybrid_persisted_property
+from sqlalchemy_persisted_hybrid_property import HybridPersistedProperty, hybrid_property_persisted
 
 
 def test_subclass_getter_copy_remains_persisted_hybrid(base_type):
@@ -16,7 +16,7 @@ def test_subclass_getter_copy_remains_persisted_hybrid(base_type):
         value: Mapped[int]
         __mapper_args__ = {"polymorphic_on": type, "polymorphic_identity": "base"}
 
-        @hybrid_persisted_property(type_=Integer)
+        @hybrid_property_persisted(type_=Integer)
         def score(self) -> int:
             return self.value
 
@@ -44,7 +44,7 @@ def test_inplace_expression_on_base_does_not_duplicate_backing_column(base_type)
         id: Mapped[int] = mapped_column(primary_key=True)
         value: Mapped[int]
 
-        @hybrid_persisted_property()
+        @hybrid_property_persisted()
         def doubled(self) -> int:
             return self.value * 2
 

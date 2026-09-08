@@ -3,7 +3,7 @@ from __future__ import annotations
 from sqlalchemy import select
 from sqlalchemy.orm import Mapped, configure_mappers, mapped_column
 
-from sqlalchemy_persisted_hybrid_property import hybrid_persisted_property
+from sqlalchemy_persisted_hybrid_property import hybrid_property_persisted
 
 
 def test_sql_materialization_handles_database_generated_primary_key(base_type, engine, session):
@@ -14,7 +14,7 @@ def test_sql_materialization_handles_database_generated_primary_key(base_type, e
         id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
         value: Mapped[int]
 
-        @hybrid_persisted_property(materialize="sql")
+        @hybrid_property_persisted(materialize="sql")
         def doubled(self) -> int:
             return self.value * 2
 
