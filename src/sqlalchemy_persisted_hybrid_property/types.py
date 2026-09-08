@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+# ruff: noqa: D100,D101,D103
 from dataclasses import dataclass
 from datetime import date, datetime
 from decimal import Decimal

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+# ruff: noqa: D100,D101
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlmodel import SQLModel as _SQLModel
 

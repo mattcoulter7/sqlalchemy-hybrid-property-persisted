@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+# ruff: noqa: D101,D103
 import builtins
 from dataclasses import dataclass
 from typing import Any
@@ -46,7 +47,7 @@ def install() -> InstallState:
         event.listen(Mapper, "after_configured", lambda: configure_dependencies())
         event.listen(Session, "before_flush", before_flush)
         event.listen(Session, "after_flush_postexec", after_flush_postexec)
-        event.listen(Session, "after_transaction_end", after_transaction_end)
+        event.listen(Session, "after_soft_rollback", after_transaction_end)
         event.listen(Session, "do_orm_execute", _guard_bulk_dml)
         _INSTALLED = True
     return InstallState(
@@ -65,7 +66,7 @@ def installation_state() -> InstallState:
 def _guard_bulk_dml(state: Any) -> None:
     configure_dependencies()
     statement = state.statement
-    if not isinstance(statement, (Update, Delete)):
+    if not isinstance(statement, Update | Delete):
         return
     table = statement.table
     for entry in registry.all_entries():

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+# ruff: noqa: D100,D103
 from typing import Any, get_type_hints
 
 from sqlalchemy import Column

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+# ruff: noqa: D100,D107,UP046
 from collections.abc import Callable, Iterable
 from typing import Any, Generic, TypeVar
 

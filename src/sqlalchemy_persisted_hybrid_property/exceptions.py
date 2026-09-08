@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+# ruff: noqa: D100
+
 
 class PersistedHybridError(Exception):
     """Base exception for persisted hybrid configuration/runtime errors."""

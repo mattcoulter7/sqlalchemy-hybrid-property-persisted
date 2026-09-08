@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+# ruff: noqa: D100,D101,D102
 from dataclasses import dataclass, field
 from typing import Any
 

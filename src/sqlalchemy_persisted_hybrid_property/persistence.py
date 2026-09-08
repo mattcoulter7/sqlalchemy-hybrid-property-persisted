@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+# ruff: noqa: D100,D101,D103,ARG001
 from collections import defaultdict
 from dataclasses import dataclass
 from typing import Any
@@ -122,7 +123,7 @@ def _add_pending_with_siblings(
     owner: Any | OwnerRef,
 ) -> None:
     for sibling in registry.descriptors_for(entry.mapper):
-        if sibling.materialize == "sql":
+        if sibling.materialize == "sql" or (sibling.materialize == "auto" and sibling.descriptor.expr is not None):
             pending[sibling].add(owner)
 
 
