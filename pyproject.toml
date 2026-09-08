@@ -1,0 +1,67 @@
+[project]
+name = "python-package-template"
+version = "0.1.1"
+description = "A template package used for shared Python modules."
+authors = [{ name = "Matt Coulter" }]
+requires-python = ">=3.11,<4.0"
+readme = "README.md"
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/mattcoulter7/python-package-template"
+Documentation = "https://github.com/mattcoulter7/python-package-template/blob/main/README.md"
+Repository = "https://github.com/mattcoulter7/python-package-template"
+
+[dependency-groups]
+dev = [
+    "pytest>=8.4.1,<9",
+    "pytest-asyncio>=1.4.0,<2",
+    "pytest-cov>=7.1.0,<8",
+    "ruff>=0.12.3,<0.13",
+    "pre-commit>=4.2.0,<5",
+    "isort>=6.0.1,<7",
+]
+
+[tool.hatch.build.targets.sdist]
+include = ["src/python_package_template"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/python_package_template"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.ruff]
+line-length = 120
+src = ["src"]
+target-version = "py312"
+
+[tool.uv]
+native-tls = true
+
+[tool.ruff.lint]
+select = [
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # pyflakes
+    "I",  # isort
+    "B",  # flake8-bugbear
+    "C4", # flake8-comprehensions
+    "UP", # pyupgrade
+    "ARG001", # unused arguments
+    "D",  # pydocstyle (docstring checks)
+]
+exclude = ["proto",".git","__pycache__",".venv"]
+ignore = [
+    "D104", # missing docstring in public package
+]
+fixable = ["ALL"]
+
+[tool.pytest.ini_options]
+markers = [
+  "integration: Assigns the test to the integration test suite.",
+  "regression: Assigns the test to the regression test suite"
+]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "session"
