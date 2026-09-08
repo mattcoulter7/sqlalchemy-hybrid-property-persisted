@@ -45,6 +45,48 @@ def test_python_only_property_materializes_from_explicit_dependency(base_type, e
     assert _stored(session, Owner, owner.id, "total") == 14
 
 
+def test_python_materialization_is_coalesced_per_owner_and_property(base_type, engine, session):
+    Base = base_type
+    getter_calls: list[int] = []
+
+    class Owner(Base):
+        __tablename__ = "python_coalesced_owner"
+        id: Mapped[int] = mapped_column(primary_key=True)
+        children: Mapped[list[Child]] = relationship(back_populates="owner", cascade="all, delete-orphan")
+
+        @hybrid_property_persisted(
+            depends_on=[
+                "children.value",
+                "children.value",
+            ],
+            materialize="python",
+        )
+        def total(self) -> int:
+            getter_calls.append(self.id)
+            return sum(child.value for child in self.children)
+
+    class Child(Base):
+        __tablename__ = "python_coalesced_child"
+        id: Mapped[int] = mapped_column(primary_key=True)
+        owner_id: Mapped[int] = mapped_column(ForeignKey("python_coalesced_owner.id"))
+        value: Mapped[int]
+        owner: Mapped[Owner] = relationship(back_populates="children")
+
+    configure_mappers()
+    Base.metadata.create_all(engine)
+
+    owner = Owner(children=[Child(value=2)])
+    session.add(owner)
+    session.flush()
+    getter_calls.clear()
+
+    owner.children[0].value = 7
+    session.flush()
+
+    assert getter_calls == [owner.id]
+    assert _stored(session, Owner, owner.id, "total") == 7
+
+
 def test_python_materialization_sets_backing_mapped_attribute_without_touching_hybrid_setter(
     base_type, engine, session
 ):
