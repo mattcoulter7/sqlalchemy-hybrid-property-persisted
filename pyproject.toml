@@ -1,16 +1,22 @@
 [project]
-name = "python-package-template"
+name = "sqlalchemy-persisted-hybrid-property"
 version = "0.1.1"
-description = "A template package used for shared Python modules."
+description = "Persist SQLAlchemy hybrid_property values into real mapped columns."
 authors = [{ name = "Matt Coulter" }]
 requires-python = ">=3.11,<4.0"
 readme = "README.md"
-dependencies = []
+dependencies = [
+    "aiosqlite>=0.21,<0.22",
+    "alembic>=1.17,<2",
+    "greenlet>=3.3,<4",
+    "sqlalchemy>=2.0,<3",
+    "sqlmodel>=0.0.27,<0.1",
+]
 
 [project.urls]
-Homepage = "https://github.com/mattcoulter7/python-package-template"
-Documentation = "https://github.com/mattcoulter7/python-package-template/blob/main/README.md"
-Repository = "https://github.com/mattcoulter7/python-package-template"
+Homepage = "https://github.com/mattcoulter7/sqlalchemy-hybrid-property-persisted"
+Documentation = "https://github.com/mattcoulter7/sqlalchemy-hybrid-property-persisted/blob/main/README.md"
+Repository = "https://github.com/mattcoulter7/sqlalchemy-hybrid-property-persisted"
 
 [dependency-groups]
 dev = [
@@ -23,10 +29,10 @@ dev = [
 ]
 
 [tool.hatch.build.targets.sdist]
-include = ["src/python_package_template"]
+include = ["src/sqlalchemy_persisted_hybrid_property"]
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/python_package_template"]
+packages = ["src/sqlalchemy_persisted_hybrid_property"]
 
 [build-system]
 requires = ["hatchling"]
