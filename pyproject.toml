@@ -1,7 +1,7 @@
 [project]
 name = "sqlalchemy-persisted-hybrid-property"
-version = "1.0.0"
-description = "Persist SQLAlchemy hybrid_property values into real mapped columns."
+version = "1.0.1"
+description = "Implementation of SQLAlchemy's @hybrid_property with database persistence."
 authors = [{ name = "Matt Coulter" }]
 requires-python = ">=3.11,<4.0"
 readme = "README.md"
