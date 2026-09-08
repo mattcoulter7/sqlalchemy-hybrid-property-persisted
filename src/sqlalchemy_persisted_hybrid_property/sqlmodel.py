@@ -13,6 +13,7 @@ except ModuleNotFoundError as exc:
 
     class SQLModel:  # type: ignore[no-redef]
         def __init_subclass__(cls, **kwargs):
+            """Raise import error on init when SQLModel is missing."""
             raise RuntimeError(
                 "SQLModel support requires the optional extra: "
                 "pip install sqlalchemy-persisted-hybrid-property[sqlmodel]"

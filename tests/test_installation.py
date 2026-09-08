@@ -27,8 +27,12 @@ def test_install_is_idempotent():
 
 def test_sqlmodel_is_optional_project_extra():
     pyproject = tomllib.loads(Path("pyproject.toml").read_text())
+    core_dependencies = "\n".join(pyproject["project"]["dependencies"])
 
-    assert "sqlmodel" not in "\n".join(pyproject["project"]["dependencies"])
+    assert "aiosqlite" not in core_dependencies
+    assert "alembic" not in core_dependencies
+    assert "greenlet" not in core_dependencies
+    assert "sqlmodel" not in core_dependencies
     assert pyproject["project"]["optional-dependencies"]["sqlmodel"] == ["sqlmodel>=0.0.27,<0.1"]
 
 

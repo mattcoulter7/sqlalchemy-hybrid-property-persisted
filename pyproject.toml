@@ -6,9 +6,6 @@ authors = [{ name = "Matt Coulter" }]
 requires-python = ">=3.11,<4.0"
 readme = "README.md"
 dependencies = [
-    "aiosqlite>=0.21,<0.22",
-    "alembic>=1.17,<2",
-    "greenlet>=3.3,<4",
     "sqlalchemy>=2.0,<3",
 ]
 
@@ -24,6 +21,9 @@ Repository = "https://github.com/mattcoulter7/sqlalchemy-hybrid-property-persist
 
 [dependency-groups]
 dev = [
+    "aiosqlite>=0.21,<0.22",
+    "alembic>=1.17,<2",
+    "greenlet>=3.3,<4",
     "pytest>=8.4.1,<9",
     "pytest-asyncio>=1.4.0,<2",
     "pytest-cov>=7.1.0,<8",
