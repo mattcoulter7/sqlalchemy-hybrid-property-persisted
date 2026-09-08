@@ -64,6 +64,14 @@ ignore = [
 ]
 fixable = ["ALL"]
 
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = [
+    "ARG001", # pytest fixtures/callbacks often require framework-defined signatures
+    "D100",   # test modules do not need public API docstrings
+    "D103",   # test functions should be named descriptively instead
+    "F401",   # regression tests may keep imports for coverage of public importability
+]
+
 [tool.pytest.ini_options]
 markers = [
   "integration: Assigns the test to the integration test suite.",
