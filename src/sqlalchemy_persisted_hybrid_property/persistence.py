@@ -54,6 +54,7 @@ def before_flush(session: Session, flush_context: Any, instances: Any) -> None:
 
     configure_dependencies()
     pending: dict[PersistedHybridEntry, _OwnerSet] = defaultdict(_OwnerSet)
+    python_pending: dict[PersistedHybridEntry, _OwnerSet] = defaultdict(_OwnerSet)
     changed = _OwnerSet((*session.new, *session.dirty, *session.deleted))
     for obj in changed:
         state = inspect(obj)
@@ -71,7 +72,7 @@ def before_flush(session: Session, flush_context: Any, instances: Any) -> None:
                 or relationship_changed
                 or (changed_keys and _entry_references(entry, mapper, changed_keys))
             ):
-                _materialize_python(obj, entry)
+                python_pending[entry].add(obj)
 
         for entry in registry.entries_for_changed_mapper(mapper):
             if entry.mapper is mapper:
@@ -80,7 +81,10 @@ def before_flush(session: Session, flush_context: Any, instances: Any) -> None:
                     or relationship_changed
                     or (changed_keys and _entry_references(entry, mapper, changed_keys))
                 ):
-                    pending[entry].add(obj)
+                    if entry.materialize == "python" or (entry.materialize == "auto" and entry.descriptor.expr is None):
+                        python_pending[entry].add(obj)
+                    else:
+                        pending[entry].add(obj)
                 continue
 
             dep_matches = [
@@ -94,9 +98,13 @@ def before_flush(session: Session, flush_context: Any, instances: Any) -> None:
                         _add_pending_with_siblings(pending, entry, owner)
                     elif not _is_deleted(session, owner):
                         if entry.materialize == "python":
-                            _materialize_python(owner, entry)
+                            python_pending[entry].add(owner)
                         else:
                             _add_pending_with_siblings(pending, entry, owner)
+
+    for entry, owners in python_pending.items():
+        for owner in owners:
+            _materialize_python(owner, entry)
 
     if pending:
         session.info[PENDING_KEY] = pending
